@@ -15,10 +15,10 @@ public class GridTester : MonoBehaviour
 
     public Grid<GameObject> Grid { get => _grid; }
 
-    //private void Start()
-    //{
-    //    GenerateNewGrid();
-    //}
+    private void Start()
+    {
+        GenerateNewGrid();
+    }
 
     public void GenerateNewGrid()
     {
