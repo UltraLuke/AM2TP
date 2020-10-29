@@ -22,7 +22,7 @@ public class GridTester : MonoBehaviour
 
     public void GenerateNewGrid()
     {
-        _grid = new Grid<GameObject>(columns, rows, 1, cellSize, origPos, (Grid<GameObject> g, int x, int y, int z) => null);
+        _grid = new Grid<GameObject>(columns, rows, 1, cellSize, origPos, (int x, int y, int z) => null);
     }
 
     

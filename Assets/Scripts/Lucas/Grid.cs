@@ -84,7 +84,7 @@ public class Grid<TGridObject>
     /// <param name="cellSize">Tamaño de la celda (1 equivale a 1x1x1, 2 equivale a 2x2x2, etc.)</param>
     /// <param name="originPos">Punto de origen de la grilla</param>
     /// <param name="createGridObject">Función para crear objetos. Útil para generar meshes</param>
-    public Grid(int w, int l, int h, float cellSize, Vector3 originPos, Func<Grid<TGridObject>, int, int, int, TGridObject> createGridObject)
+    public Grid(int w, int l, int h, float cellSize, Vector3 originPos, Func<int, int, int, TGridObject> createGridObject)
     {
         _width = w;
         _length = l;
@@ -94,16 +94,16 @@ public class Grid<TGridObject>
 
         _gridArray3D = new TGridObject[w, l, h];
 
-        //for (int z = 0; z < _gridArray3D.GetLength(2); z++)
-        //{
-        //    for (int x = 0; x < _gridArray3D.GetLength(0); x++)
-        //    {
-        //        for (int y = 0; y < _gridArray3D.GetLength(1); y++)
-        //        {
-        //            _gridArray3D[x, y, z] = createGridObject(this, x, y, z);
-        //        }
-        //    }
-        //}
+        for (int z = 0; z < _gridArray3D.GetLength(2); z++)
+        {
+            for (int x = 0; x < _gridArray3D.GetLength(0); x++)
+            {
+                for (int y = 0; y < _gridArray3D.GetLength(1); y++)
+                {
+                    _gridArray3D[x, y, z] = createGridObject(x, y, z);
+                }
+            }
+        }
 
         //bool showDebug = true;
         //if (showDebug)

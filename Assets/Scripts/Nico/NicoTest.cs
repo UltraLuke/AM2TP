@@ -66,12 +66,12 @@ public class NicoTest : MonoBehaviour
 
     private void RightRotation()
     {
-        throw new NotImplementedException();
+        
     }
 
     private void LeftRotation()
     {
-        throw new NotImplementedException();
+        
     }
 
     IEnumerator C_ScrollCoolDown()
@@ -95,7 +95,7 @@ public class NicoTest : MonoBehaviour
 
     private void ChangeAlpha()
     {
-        throw new NotImplementedException();
+
     }
 
     private Vector3 GetMousePositionOnGrid()
