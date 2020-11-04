@@ -26,6 +26,11 @@ public static class PaletteManager
         return Resources.Load<PaletteObject>("Palettes/" + paletteName);
     }
 
+    public static PaletteObject[] GetPalettes()
+    {
+        return Resources.LoadAll<PaletteObject>("Palettes");
+    }
+
     public static PaletteObject LoadPalette(string paletteName, string path)
     {
         return (PaletteObject)AssetDatabase.LoadAssetAtPath(path + paletteName, typeof(PaletteObject));
