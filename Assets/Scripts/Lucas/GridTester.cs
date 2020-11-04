@@ -1,29 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class GridTester : MonoBehaviour
 {
-    public int rows;
-    public int columns;
-    //public int floors;
-    public float cellSize;
-    public Vector3 origPos;
+    public LayerMask layerMask;
+    private CustomGrid grid;
+    //public PrimitiveType primitive = PrimitiveType.Cube;
+    public GameObject currObj;
 
+    public CustomGrid Grid { get => grid; }
 
-    Grid<GameObject> _grid;
-
-    public Grid<GameObject> Grid { get => _grid; }
-
-    private void Start()
+    private void Awake()
     {
-        GenerateNewGrid();
+        grid = FindObjectOfType<CustomGrid>();
     }
-
-    public void GenerateNewGrid()
-    {
-        _grid = new Grid<GameObject>(columns, rows, 1, cellSize, origPos, (int x, int y, int z) => null);
-    }
-
-    
 }
