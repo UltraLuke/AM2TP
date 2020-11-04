@@ -40,7 +40,6 @@ public class CustomGrid : MonoBehaviour
         _objects[gridPos] = obj;
     }
 
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

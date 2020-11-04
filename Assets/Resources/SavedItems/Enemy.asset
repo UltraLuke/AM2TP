@@ -14,10 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myName: Enemy
   path: Assets/Prefab/Enemy.prefab
-  transform: {fileID: 0}
   position: {x: -6.56, y: 0, z: -7.24}
   scale: {x: 1, y: 1, z: 1}
   rotation: {x: 0, y: 0, z: 0, w: 1}
-  row: 0
-  column: 0
-  origin: {x: 0, y: 0, z: 0}

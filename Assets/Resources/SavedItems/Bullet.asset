@@ -14,10 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myName: Bullet
   path: Assets/Prefab/Bullet.prefab
-  transform: {fileID: 0}
   position: {x: -6.57, y: 0, z: 7.01}
   scale: {x: 0.25, y: 0.25, z: 0.75}
   rotation: {x: 0, y: 0, z: 0, w: 1}
-  row: 0
-  column: 0
-  origin: {x: 0, y: 0, z: 0}

@@ -242,7 +242,7 @@ public class LevelEditor : EditorWindow
         {
             palleteName = "";
             newPalletePrefab.Clear();
-            Repaint()
+            Repaint();
         }
 
     }

@@ -57,39 +57,39 @@ public class GridTesterEditor : Editor
 
     private void OnSceneGUI()
     {
-        Event e = Event.current;
+        //Event e = Event.current;
 
-        if (e.type == EventType.MouseDown && e.button == 0)
-        {
+        //if (e.type == EventType.MouseDown && e.button == 0)
+        //{
 
-            RaycastHit hitInfo;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //    RaycastHit hitInfo;
+        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (_plane.Raycast(ray, out float enter))
-            {
-                Debug.Log("Instantiate");
-                Vector3 hitPoint = ray.GetPoint(enter);
-                var obj = Instantiate(currObj);
-                _grid.SetObjectOnGrid(obj, hitPoint);
-            }
-            //if(Camera.current != null && _grid != null)
-            //{
-            //    var point = CustomUtils.CustomUtilities.GetMouseWorldPositionWithZ(Camera.current);
-            //    point = new Vector3(point.x, 0, -point.z);
-            //    var obj = Instantiate(currObj);
-            //    _grid.SetObjectOnGrid(obj, point);
-            //}
-        }
+        //    if (_plane.Raycast(ray, out float enter))
+        //    {
+        //        Debug.Log("Instantiate");
+        //        Vector3 hitPoint = ray.GetPoint(enter);
+        //        var obj = Instantiate(currObj);
+        //        _grid.SetObjectOnGrid(obj, hitPoint);
+        //    }
+        //    //if(Camera.current != null && _grid != null)
+        //    //{
+        //    //    var point = CustomUtils.CustomUtilities.GetMouseWorldPositionWithZ(Camera.current);
+        //    //    point = new Vector3(point.x, 0, -point.z);
+        //    //    var obj = Instantiate(currObj);
+        //    //    _grid.SetObjectOnGrid(obj, point);
+        //    //}
+        //}
     }
 
     public void DrawGrid()
     {
-        if (gridTester == null) return;
+        //if (gridTester == null) return;
 
-        var extColor = new Color(0, 1, 0, .5f);
-        var intColor = new Color(1, 1, 1, .25f);
+        //var extColor = new Color(0, 1, 0, .5f);
+        //var intColor = new Color(1, 1, 1, .25f);
 
-        //var grid = _gridTester.Grid;
+        ////var grid = _gridTester.Grid;
 
         //for (int k = 0; k < 1; k++)
         //{

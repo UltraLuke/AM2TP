@@ -42,9 +42,17 @@ public class GridSaver : Editor
         //grid.GetGridData() Como me lo pasa? como una lista? row, column, cellsize, origpos
     }
     public static void CreateTestList()
-    {        
-        GameObject[] objectsInScene = FindObjectsOfType<GameObject>();
-        for (int i = 0; i < objectsInScene.Length; i++)
+    {
+        var objects = FindObjectOfType<CustomGrid>().ObjectList;
+        var objectsInScene = new List<GameObject>();
+
+        foreach (var item in objects)
+        {
+            objectsInScene.Add(item.Value);
+        }
+
+        //GameObject[] objectsInScene = FindObjectsOfType<GameObject>();
+        for (int i = 0; i < objectsInScene.Count; i++)
         {
             if (objectsInScene[i].layer == 9)
             {
