@@ -43,6 +43,7 @@ public class GridSaver : Editor
     }
     public static void CreateTestList()
     {
+        /*
         var objects = FindObjectOfType<CustomGrid>().ObjectList;
         var objectsInScene = new List<GameObject>();
 
@@ -50,9 +51,9 @@ public class GridSaver : Editor
         {
             objectsInScene.Add(item.Value);
         }
-
-        //GameObject[] objectsInScene = FindObjectsOfType<GameObject>();
-        for (int i = 0; i < objectsInScene.Count; i++)
+        */
+        GameObject[] objectsInScene = FindObjectsOfType<GameObject>();
+        for (int i = 0; i < objectsInScene.Length; i++)
         {
             if (objectsInScene[i].layer == 9)
             {

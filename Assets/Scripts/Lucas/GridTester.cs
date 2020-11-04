@@ -17,19 +17,19 @@ public class GridTester : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            RaycastHit hitInfo;
+            RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out hitInfo, layerMask))
+            if (Physics.Raycast(ray, out hit, 500, layerMask))
             {
                 //Debug.Log("Instantiate");
                 //Vector3 hitPoint = ray.GetPoint(hitInfo.po);
                 //var obj = Instantiate(currObj);
                 //_grid.SetObjectOnGrid(obj, hitPoint);
 
-                Vector3 hitPoint = hitInfo.point;
+                Vector3 hitPoint = hit.point;
                 var obj = Instantiate(currObj);
                 grid.SetObjectOnGrid(obj, hitPoint);
             }
