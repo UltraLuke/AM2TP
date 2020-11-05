@@ -80,7 +80,7 @@ public class LevelEditor : EditorWindow
 
         if (auxPallete.content != null)
         {
-            var prefabListCopy = auxPallete.content.GetRange(0, auxPallete.content.Count);
+            var prefabListCopy = auxPallete.content.Keys.ToList().GetRange(0, auxPallete.content.Count);
 
             do
             {
@@ -224,9 +224,11 @@ public class LevelEditor : EditorWindow
             PaletteManager.CreatePalette(palleteName);
 
             var pallete = PaletteManager.LoadPalette(palleteName);
+            //TODO: Agregar logica de descripcion
+            string desc = "Test description";
 
             foreach (GameObject aux in newPalletePrefab)
-                pallete.AddObject(aux);
+                pallete.AddObject(aux, desc);
 
             palleteName = "";
             newPalletePrefab.Clear();
