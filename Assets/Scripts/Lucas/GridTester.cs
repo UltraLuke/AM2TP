@@ -1,29 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class GridTester : MonoBehaviour
 {
-    public int rows;
-    public int columns;
-    //public int floors;
-    public float cellSize;
-    public Vector3 origPos;
+    public LayerMask layerMask;
+    private CustomGrid grid;
+    //public PrimitiveType primitive = PrimitiveType.Cube;
+    public GameObject currObj;
 
+    public CustomGrid Grid { get => grid; }
 
-    Grid<GameObject> _grid;
-
-    public Grid<GameObject> Grid { get => _grid; }
-
-    private void Start()
+    private void Awake()
     {
-        GenerateNewGrid();
+        grid = FindObjectOfType<CustomGrid>();
     }
 
-    public void GenerateNewGrid()
+    private void Update()
     {
-        _grid = new Grid<GameObject>(columns, rows, 1, cellSize, origPos, (int x, int y, int z) => null);
-    }
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hitInfo;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-    
+            if (Physics.Raycast(ray, out hitInfo, layerMask))
+            {
+                //Debug.Log("Instantiate");
+                //Vector3 hitPoint = ray.GetPoint(hitInfo.po);
+                //var obj = Instantiate(currObj);
+                //_grid.SetObjectOnGrid(obj, hitPoint);
+
+                Vector3 hitPoint = hitInfo.point;
+                var obj = Instantiate(currObj);
+                grid.SetObjectOnGrid(obj, hitPoint);
+            }
+        }
+    }
 }
