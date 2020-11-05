@@ -30,9 +30,4 @@ public static class PaletteManager
     {
         return Resources.LoadAll<PaletteObject>("Palettes");
     }
-
-    public static PaletteObject LoadPalette(string paletteName, string path)
-    {
-        new NotImplementedException();
-    }
 }
