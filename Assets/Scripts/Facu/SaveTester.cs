@@ -2,10 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SaveTester : MonoBehaviour
+[CreateAssetMenu(fileName ="SaveTester", menuName ="LevelEditor/Tester")]
+public class SaveTester : ScriptableObject
 {
-    void Start()
+    public string paletteName;
+    public List<GameObject> objectList;
+
+    public void CreatePalette()
     {
-        PaletteManager.DeletePalette("NewPalette");
+        PaletteManager.CreatePalette(paletteName);
+    }
+
+    public void AddObjectListToPalette()
+    {
+        var palette = PaletteManager.LoadPalette(paletteName);
+
+        foreach (var item in objectList)
+        {
+            palette.AddObject(item);
+        }
     }
 }
