@@ -15,24 +15,25 @@ public class GridTester : MonoBehaviour
         grid = FindObjectOfType<CustomGrid>();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //private void Update()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        RaycastHit hit;
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out hit, 500, layerMask))
-            {
-                //Debug.Log("Instantiate");
-                //Vector3 hitPoint = ray.GetPoint(hitInfo.po);
-                //var obj = Instantiate(currObj);
-                //_grid.SetObjectOnGrid(obj, hitPoint);
+    //        if (Physics.Raycast(ray, out hit))
+    //        {
+    //            Debug.Log("Raycasting");
+    //            //Debug.Log("Instantiate");
+    //            //Vector3 hitPoint = ray.GetPoint(hitInfo.po);
+    //            //var obj = Instantiate(currObj);
+    //            //_grid.SetObjectOnGrid(obj, hitPoint);
 
-                Vector3 hitPoint = hit.point;
-                var obj = Instantiate(currObj);
-                grid.SetObjectOnGrid(obj, hitPoint);
-            }
-        }
-    }
+    //            Vector3 hitPoint = hit.point;
+    //            var obj = Instantiate(currObj);
+    //            grid.SetObjectOnGrid(obj, hitPoint);
+    //        }
+    //    }
+    //}
 }

@@ -23,7 +23,6 @@ public class GridTesterEditor : Editor
         layerMask = gridTester.layerMask;
         currObj = gridTester.currObj;
         _plane = new Plane(Vector3.up, Vector3.zero);
-
         SceneView.RepaintAll();
     }
 
@@ -57,29 +56,32 @@ public class GridTesterEditor : Editor
 
     private void OnSceneGUI()
     {
-        //Event e = Event.current;
+        Event e = Event.current;
 
-        //if (e.type == EventType.MouseDown && e.button == 0)
-        //{
+        if (e.type == EventType.MouseDown && e.button == 0)
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+            //Ray ray = Camera.current.ScreenPointToRay(e.mousePosition);
+            //RaycastHit hitInfo;
 
-        //    RaycastHit hitInfo;
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
+            //{
+            //    Debug.Log("Paso por aca");
+            //    Vector3 hitPoint = hitInfo.point;
+            //    var obj = (GameObject)PrefabUtility.InstantiatePrefab(currObj);
+            //    _grid.SetObjectOnGrid(obj, hitPoint);
+            //}
 
-        //    if (_plane.Raycast(ray, out float enter))
-        //    {
-        //        Debug.Log("Instantiate");
-        //        Vector3 hitPoint = ray.GetPoint(enter);
-        //        var obj = Instantiate(currObj);
-        //        _grid.SetObjectOnGrid(obj, hitPoint);
-        //    }
-        //    //if(Camera.current != null && _grid != null)
-        //    //{
-        //    //    var point = CustomUtils.CustomUtilities.GetMouseWorldPositionWithZ(Camera.current);
-        //    //    point = new Vector3(point.x, 0, -point.z);
-        //    //    var obj = Instantiate(currObj);
-        //    //    _grid.SetObjectOnGrid(obj, point);
-        //    //}
-        //}
+            if (_plane.Raycast(ray, out float enter))
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+                var obj = (GameObject)PrefabUtility.InstantiatePrefab(currObj);
+                _grid.SetObjectOnGrid(obj, hitPoint);
+            }
+            
+        }
+        _grid.CleanEmptyReferences();
+
     }
 
     public void DrawGrid()

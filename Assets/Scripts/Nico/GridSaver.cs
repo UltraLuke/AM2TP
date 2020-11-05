@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Experimental.AI;
 
 public class GridSaver : Editor
 {
@@ -36,6 +35,8 @@ public class GridSaver : Editor
             path = AssetDatabase.GenerateUniqueAssetPath(path);
             AssetDatabase.CreateAsset(scriptable, path);
         }
+
+        items.Clear();
     }
     private static void SaveGrid()
     {
@@ -43,7 +44,7 @@ public class GridSaver : Editor
     }
     public static void CreateTestList()
     {
-        /*
+
         var objects = FindObjectOfType<CustomGrid>().ObjectList;
         var objectsInScene = new List<GameObject>();
 
@@ -51,15 +52,12 @@ public class GridSaver : Editor
         {
             objectsInScene.Add(item.Value);
         }
-        */
-        GameObject[] objectsInScene = FindObjectsOfType<GameObject>();
-        for (int i = 0; i < objectsInScene.Length; i++)
+
+        //GameObject[] objectsInScene = FindObjectsOfType<GameObject>();
+        for (int i = 0; i < objectsInScene.Count; i++)
         {
-            if (objectsInScene[i].layer == 9)
-            {
-                items.Add(objectsInScene[i]);
-                Debug.Log("Added: " + objectsInScene[i].name);
-            }
+            items.Add(objectsInScene[i]);
+            Debug.Log("Added: " + objectsInScene[i].name);
         }
 
         /* var grid = FindObjectOfType<Grid>();
