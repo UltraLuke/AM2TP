@@ -9,7 +9,6 @@ public class GridTesterEditor : Editor
     GridTester gridTester;
     LayerMask layerMask;
     GameObject currObj;
-    //PrimitiveType _primitive;
 
     Plane _plane;
 
@@ -37,12 +36,6 @@ public class GridTesterEditor : Editor
 
     private void CheckKeys()
     {
-
-
-        //if (Input.GetKeyDown(KeyCode.Keypad1)) _primitive = PrimitiveType.Cube;
-        //else if (Input.GetKeyDown(KeyCode.Keypad2)) _primitive = PrimitiveType.Sphere;
-        //else if (Input.GetKeyDown(KeyCode.Keypad3)) _primitive = PrimitiveType.Cylinder;
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             var objects = _grid.ObjectList;
@@ -61,16 +54,6 @@ public class GridTesterEditor : Editor
         if (e.type == EventType.MouseDown && e.button == 0)
         {
             Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
-            //Ray ray = Camera.current.ScreenPointToRay(e.mousePosition);
-            //RaycastHit hitInfo;
-
-            //if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
-            //{
-            //    Debug.Log("Paso por aca");
-            //    Vector3 hitPoint = hitInfo.point;
-            //    var obj = (GameObject)PrefabUtility.InstantiatePrefab(currObj);
-            //    _grid.SetObjectOnGrid(obj, hitPoint);
-            //}
 
             if (_plane.Raycast(ray, out float enter))
             {
