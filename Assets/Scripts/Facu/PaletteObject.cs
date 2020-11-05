@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="NewPalette", menuName ="LevelEditor/NewPalette")]
 public class PaletteObject : ScriptableObject
 {
-    public List<GameObject> content = new List<GameObject>();
+    public Dictionary<GameObject, string> content = new Dictionary<GameObject, string>();
     public string paletteName;
 
     public PaletteObject SetName(string name)
@@ -14,16 +14,16 @@ public class PaletteObject : ScriptableObject
         return this;
     }
 
-    public void AddObject(GameObject gameObject)
+    public void AddObject(GameObject gameObject, string description)
     {
-        if (content.Contains(gameObject))
+        if (content.ContainsKey(gameObject))
             return;
-        content.Add(gameObject);
+        content.Add(gameObject, description);
     }
 
     public void RemoveObject(GameObject gameObject)
     {
-        if (content.Contains(gameObject))
+        if (content.ContainsKey(gameObject))
             return;
         content.Remove(gameObject);
     }
