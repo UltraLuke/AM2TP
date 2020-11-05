@@ -24,7 +24,7 @@ public class LevelEditor : EditorWindow
 
     private List<GameObject> newPalletePrefab = new List<GameObject>();
 
-    private string  palleteName = "";
+    private string palleteName = "";
 
     [MenuItem("CustomTools/LevelEditor")]
     public static void OpenWindow()
@@ -94,7 +94,8 @@ public class LevelEditor : EditorWindow
                     GUILayout.BeginVertical("Box");
                     //GUI.DrawTexture(GUILayoutUtility.GetRect(50, 50), (Texture2D)Resources.Load("unity-128"), ScaleMode.ScaleToFit);
                     GUILayout.Label(prefabListCopy[0].name);
-                    Texture2D newTexture = Resources.Load("unity-128", typeof(Texture2D)) as Texture2D;
+                    var newTexture = AssetPreview.GetAssetPreview(prefabListCopy[0]);
+                    //Texture2D newTexture = Resources.Load("unity-128", typeof(Texture2D)) as Texture2D;
                     GUILayout.Button(newTexture, GUILayout.Width(100), GUILayout.Height(100));
                     prefabListCopy.RemoveAt(0);
                     GUILayout.EndVertical();
@@ -116,16 +117,14 @@ public class LevelEditor : EditorWindow
     private List<PaletteObject> GetPalletes()
     {
         var auxpalletes = new List<PaletteObject>();
-        var pallete = new PaletteObject();
 
-        pallete.name = "Floors";
-        pallete.content = GetPalletePrefabs(pallete.name, 15);
-        auxpalletes.Add(pallete);
 
-        pallete = new PaletteObject();
-        pallete.name = "Buildings";
-        pallete.content = GetPalletePrefabs(pallete.name, 2);
-        auxpalletes.Add(pallete);
+        var getPalettes = PaletteManager.GetPalettes();
+
+        for (int x = 0; x < getPalettes.Length; x++)
+        {
+            auxpalletes.Add(getPalettes[x]);
+        }
 
         return auxpalletes;
     }
@@ -149,7 +148,7 @@ public class LevelEditor : EditorWindow
     {
         EditorGUILayout.LabelField("New Pallete");
 
-        
+
         palleteName = EditorGUILayout.TextField("Pallete Name", palleteName);
 
         DrawLine();
@@ -170,17 +169,13 @@ public class LevelEditor : EditorWindow
 
         _assetList = new List<Object>();
         _assetList.Clear();
-        //AssetDatabase.FindAssets me retorna todos los paths de los assets que coinciden con el parámetro, en formato GUID
 
-        string[] paths = AssetDatabase.FindAssets("t:prefab");
+        string[] paths = AssetDatabase.FindAssets("t:prefab", new[] { "Assets/Resources" });
 
 
         for (int i = 0; i < paths.Length; i++)
         {
-            //Convierto el GUID al formato "normal"
             paths[i] = AssetDatabase.GUIDToAssetPath(paths[i]);
-
-            //cargo el asset en memoria
             var loaded = AssetDatabase.LoadAssetAtPath(paths[i], typeof(Object));
 
             _assetList.Add(loaded);
@@ -206,7 +201,6 @@ public class LevelEditor : EditorWindow
                     if (GUILayout.Button(texture, GUILayout.Width(100), GUILayout.Height(100)))
                     {
                         GameObject gameObject = Resources.Load(prefabListCopy[0].name, typeof(GameObject)) as GameObject;
-
                         if (!newPalletePrefab.Contains(gameObject))
                         {
                             newPalletePrefab.Add(gameObject);
@@ -236,7 +230,7 @@ public class LevelEditor : EditorWindow
 
             palleteName = "";
             newPalletePrefab.Clear();
-
+            Repaint();
         }
         if (GUILayout.Button("Clear Pallete", GUILayout.Width(100), GUILayout.Height(20)))
         {
