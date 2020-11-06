@@ -49,6 +49,32 @@ public class CustomGrid : MonoBehaviour
 
         ObjectList[gridPos] = obj;
     }
+    public GameObject GetObjectOnGrid(Vector3 position)
+    {
+        position = GetNearestPointOnGrid(position);
+
+        if (_objects.ContainsKey(position))
+            return _objects[position];
+
+        return null;
+    }
+    public void DeleteObject(Vector3 position)
+    {
+        position = GetNearestPointOnGrid(position);
+
+        if (ObjectList.ContainsKey(position))
+        {
+            DestroyImmediate(ObjectList[position]);
+            ObjectList[position] = null;
+        }
+    }
+    public bool CheckIfAvailablePosition(Vector3 position)
+    {
+        position = GetNearestPointOnGrid(position);
+
+        bool occuped = _objects.ContainsKey(position);
+        return !occuped;
+    }
 
     public void CleanEmptyReferences()
     {
