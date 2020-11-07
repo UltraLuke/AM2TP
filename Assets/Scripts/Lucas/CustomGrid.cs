@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CustomGrid : MonoBehaviour
 {
-    [SerializeField] private float size = 1f;
+    public float size = 1f;
 
     private Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
     private object locker;
@@ -116,28 +116,8 @@ public class CustomGrid : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Color yellow = Color.yellow;
-        Color red = Color.red;
-
-        Color current = yellow;
-
-        Gizmos.color = current;
-
-        for (float x = 0; x < 40; x += size)
-        {
-            for (float z = 0; z < 40; z += size)
-            {
-                var point = GetNearestPointOnGrid(new Vector3(x, 0f, z));
-
-                if (ObjectList.ContainsKey(point))
-                    Gizmos.color = red;
-                else
-                    Gizmos.color = yellow;
-
-                Gizmos.DrawSphere(point, 0.1f);
-            }
-        }
-    }
+    //private void OnDrawGizmos()
+    //{
+        
+    //}
 }

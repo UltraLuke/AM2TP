@@ -8,11 +8,12 @@ public class GridTesterEditor : Editor
 {
     GridTester gridTester;
     GameObject currObj;
+    LayerMask layerMask;
+    float cellSize;
+
     GameObject _lastCurrObj;
     CustomGrid _grid;
-    LayerMask layerMask;
     Plane _plane;
-
     GameObject _selectedObject;
     Vector3 _lastSelectedPos = Vector3.zero;
 
@@ -27,10 +28,11 @@ public class GridTesterEditor : Editor
     private void OnEnable()
     {
         gridTester = (GridTester)target;
-
         _grid = FindObjectOfType<CustomGrid>();
+
         layerMask = gridTester.layerMask;
         currObj = gridTester.currObj;
+        cellSize = _grid.size;
         _plane = new Plane(Vector3.up, Vector3.zero);
 
         SceneView.RepaintAll();
@@ -47,6 +49,7 @@ public class GridTesterEditor : Editor
         //gridTester.layerMask = layerMask = EditorGUILayout.LayerField("Plano de referencia", layerMask);
         if (!_movingObject)
         {
+            cellSize = _grid.size = EditorGUILayout.FloatField("Cell Size", cellSize);
             gridTester.currObj = currObj = (GameObject)EditorGUILayout.ObjectField("Objeto actual", currObj, typeof(GameObject), false);
             _canReplaceObjects = EditorGUILayout.Toggle("Can Replace Objects", _canReplaceObjects);
             _tabSelection = GUILayout.Toolbar(_tabSelection, _modeTabs);
@@ -82,7 +85,6 @@ public class GridTesterEditor : Editor
         }
 
         CheckKeys();
-        _grid.CleanEmptyReferences();
     }
 
     private void DestroyEditingObject()
@@ -100,9 +102,10 @@ public class GridTesterEditor : Editor
 
         HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
+        //Modo creacion
         if (_tabSelection == 0)
         {
-
+            //Cuando detecto un click del mouse, creo un objeto en el lugar.
             if (e.type == EventType.MouseDown && e.button == 0)
             {
                 Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
@@ -118,6 +121,7 @@ public class GridTesterEditor : Editor
                     }
                 }
             }
+            //Sino, updateo la posicion del objeto de muestra.
             else if (e.type == EventType.MouseMove)
             {
                 if (_selectedObject != null)
@@ -134,8 +138,10 @@ public class GridTesterEditor : Editor
                 }
             }
         }
+        //Modo edicion
         else if (_tabSelection == 1)
         {
+            //Si hago click, puedo realizar dos acciones mencionadas abajo
             if (e.type == EventType.MouseDown && e.button == 0)
             {
                 Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
@@ -144,29 +150,42 @@ public class GridTesterEditor : Editor
                 {
                     Vector3 hitPoint = ray.GetPoint(enter);
 
-                    if (_selectedObject == null)
+                    var obj = _grid.GetObjectOnGrid(hitPoint);
+
+                    //Si no estoy moviendo un objeto, obtengo dicho objeto y lo uso como objeto de muestra.
+                    //Es decir, empiezo a mover un objeto
+                    if (!_movingObject && obj != null)
                     {
                         _selectedObject = _grid.GetObjectOnGrid(hitPoint);
                         _lastSelectedPos = _grid.GetNearestPointOnGrid(hitPoint);
                         _movingObject = true;
                     }
-                    else
+                    //Si estoy moviendo un objeto, dejo el mismo en la posicion donde cliquie.
+                    //Dejo de mover el objeto.
+                    else if (_movingObject)
                     {
-                        if(_grid.GetObjectOnGrid(hitPoint) != _selectedObject)
+                        if(obj == null)
                         {
                             _grid.MoveObject(_lastSelectedPos, hitPoint);
                             _selectedObject = null;
                         }
                         else
                         {
-                            _grid.SetObjectOnGrid(_selectedObject, _lastSelectedPos);
+                            _selectedObject.transform.position = _grid.GetNearestPointOnGrid(_lastSelectedPos);
+                            _selectedObject = null;
+                            //_grid.SetObjectOnGrid(obj, _lastSelectedPos);
                         }
+
+                        _grid.CleanEmptyReferences();
+                        SceneView.RepaintAll();
 
                         _movingObject = false;
                     }
+                    Repaint();
                 }
 
             }
+            //Si estoy moviendo un objeto, updateo la posicion de dicho objeto, sin linkearlo a la grilla.
             else if (e.type == EventType.MouseMove)
             {
                 if (_selectedObject != null)
@@ -183,8 +202,10 @@ public class GridTesterEditor : Editor
                 }
             }
         }
+        //Modo delete
         else if (_tabSelection == 2)
         {
+            //Si hago click, elimina el objeto de dicha posicion.
             if (e.type == EventType.MouseDown && e.button == 0)
             {
                 Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
@@ -196,6 +217,8 @@ public class GridTesterEditor : Editor
                 }
             }
         }
+
+        DrawGrid();
     }
 
     private void CheckKeys()
@@ -242,5 +265,30 @@ public class GridTesterEditor : Editor
         //    Handles.DrawLine(_grid.GetWorldPosition(0, k, _gridTester.rows), _grid.GetWorldPosition(_gridTester.columns, k, _gridTester.rows));
         //    Handles.DrawLine(_grid.GetWorldPosition(_gridTester.columns, k, 0), _grid.GetWorldPosition(_gridTester.columns, k, _gridTester.rows));
         //}
+
+        _grid.CleanEmptyReferences();
+
+        Color yellow = Color.yellow;
+        Color red = Color.red;
+        int identity = 0;
+
+        Color current = yellow;
+
+        Handles.color = current;
+
+        for (float x = 0; x < 40; x += cellSize)
+        {
+            for (float z = 0; z < 40; z += cellSize)
+            {
+                var point = _grid.GetNearestPointOnGrid(new Vector3(x, 0f, z));
+
+                if (_grid.ObjectList.ContainsKey(point))
+                    Handles.color = red;
+                else
+                    Handles.color = yellow;
+
+                Handles.DrawSphere(identity, point, Quaternion.identity, 0.1f);
+            }
+        }
     }
 }
