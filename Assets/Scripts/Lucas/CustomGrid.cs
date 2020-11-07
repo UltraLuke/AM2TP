@@ -53,10 +53,41 @@ public class CustomGrid : MonoBehaviour
     {
         position = GetNearestPointOnGrid(position);
 
-        if (_objects.ContainsKey(position))
-            return _objects[position];
+        if (ObjectList.ContainsKey(position))
+            return ObjectList[position];
 
         return null;
+    }
+    //public GameObject TakeObjectFromGrid(Vector3 position)
+    //{
+    //    position = GetNearestPointOnGrid(position);
+
+    //    if (_objects.ContainsKey(position))
+    //    {
+    //        var obj = _objects[position];
+    //        _objects.Remove(position);
+
+    //        return obj;
+    //    }
+
+    //    return null;
+    //}
+    public void MoveObject(Vector3 from, Vector3 to)
+    {
+        from = GetNearestPointOnGrid(from);
+        to = GetNearestPointOnGrid(to);
+
+        if (ObjectList.ContainsKey(from))
+        {
+            var obj = _objects[from];
+            obj.transform.position = to;
+
+            if (ObjectList.ContainsKey(to))
+                DestroyImmediate(ObjectList[to]);
+
+            ObjectList[to] = obj;
+            ObjectList.Remove(from);
+        }
     }
     public void DeleteObject(Vector3 position)
     {

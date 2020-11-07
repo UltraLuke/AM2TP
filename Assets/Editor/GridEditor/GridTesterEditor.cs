@@ -14,11 +14,15 @@ public class GridTesterEditor : Editor
     Plane _plane;
 
     GameObject _selectedObject;
+    Vector3 _lastSelectedPos = Vector3.zero;
 
     bool _canReplaceObjects = false;
 
     string[] _modeTabs = { "Create", "Edit", "Delete" };
     int _tabSelection = 0;
+
+    //Flags
+    bool _movingObject = false;
 
     private void OnEnable()
     {
@@ -32,14 +36,27 @@ public class GridTesterEditor : Editor
         SceneView.RepaintAll();
     }
 
+    private void OnDisable()
+    {
+        if (_selectedObject != null)
+            DestroyImmediate(_selectedObject);
+    }
+
     public override void OnInspectorGUI()
     {
-        gridTester.layerMask = layerMask = EditorGUILayout.LayerField("Plano de referencia", layerMask);
-        gridTester.currObj = currObj = (GameObject)EditorGUILayout.ObjectField("Objeto actual", currObj, typeof(GameObject), false);
+        //gridTester.layerMask = layerMask = EditorGUILayout.LayerField("Plano de referencia", layerMask);
+        if (!_movingObject)
+        {
+            gridTester.currObj = currObj = (GameObject)EditorGUILayout.ObjectField("Objeto actual", currObj, typeof(GameObject), false);
+            _canReplaceObjects = EditorGUILayout.Toggle("Can Replace Objects", _canReplaceObjects);
+            _tabSelection = GUILayout.Toolbar(_tabSelection, _modeTabs);
+        }
+        else
+        {
+            EditorGUILayout.HelpBox("No se puede acceder a los controles mientras se está moviendo un objeto", MessageType.Info);
+        }
 
 
-        _canReplaceObjects = EditorGUILayout.Toggle("Can Replace Objects", _canReplaceObjects);
-        _tabSelection = GUILayout.Toolbar(_tabSelection, _modeTabs);
 
         //Si entro al modo edicion instancio el objeto de muestra del objeto actual.
         if(_tabSelection == 0)
@@ -54,6 +71,11 @@ public class GridTesterEditor : Editor
                 _selectedObject = (GameObject)PrefabUtility.InstantiatePrefab(currObj);
         }
         //Si salgo del modo edicion, dejo de mostrar el objeto muestra.
+        else if(_tabSelection == 1)
+        {
+            if(!_movingObject)
+                DestroyEditingObject();
+        }
         else
         {
             DestroyEditingObject();
@@ -76,9 +98,10 @@ public class GridTesterEditor : Editor
     {
         Event e = Event.current;
 
+        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+
         if (_tabSelection == 0)
         {
-            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
             if (e.type == EventType.MouseDown && e.button == 0)
             {
@@ -111,9 +134,57 @@ public class GridTesterEditor : Editor
                 }
             }
         }
+        else if (_tabSelection == 1)
+        {
+            if (e.type == EventType.MouseDown && e.button == 0)
+            {
+                Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+
+                if (_plane.Raycast(ray, out float enter))
+                {
+                    Vector3 hitPoint = ray.GetPoint(enter);
+
+                    if (_selectedObject == null)
+                    {
+                        _selectedObject = _grid.GetObjectOnGrid(hitPoint);
+                        _lastSelectedPos = _grid.GetNearestPointOnGrid(hitPoint);
+                        _movingObject = true;
+                    }
+                    else
+                    {
+                        if(_grid.GetObjectOnGrid(hitPoint) != _selectedObject)
+                        {
+                            _grid.MoveObject(_lastSelectedPos, hitPoint);
+                            _selectedObject = null;
+                        }
+                        else
+                        {
+                            _grid.SetObjectOnGrid(_selectedObject, _lastSelectedPos);
+                        }
+
+                        _movingObject = false;
+                    }
+                }
+
+            }
+            else if (e.type == EventType.MouseMove)
+            {
+                if (_selectedObject != null)
+                {
+                    Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+
+                    if (_plane.Raycast(ray, out float enter))
+                    {
+                        Vector3 hitPoint = ray.GetPoint(enter);
+
+                        var pointToPlace = _grid.GetNearestPointOnGrid(hitPoint);
+                        _selectedObject.transform.position = pointToPlace;
+                    }
+                }
+            }
+        }
         else if (_tabSelection == 2)
         {
-            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
             if (e.type == EventType.MouseDown && e.button == 0)
             {
                 Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
