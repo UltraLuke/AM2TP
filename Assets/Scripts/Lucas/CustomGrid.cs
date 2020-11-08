@@ -6,9 +6,9 @@ public class CustomGrid : MonoBehaviour
 {
     public float size = 1f;
 
-    private Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
+    public Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
     private object locker;
-    public float Size { get => size; }
+    //public float Size { get => size; }
     public Dictionary<Vector3, GameObject> ObjectList
     {
         get
