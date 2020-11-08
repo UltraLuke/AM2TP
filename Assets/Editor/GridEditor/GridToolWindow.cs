@@ -70,7 +70,9 @@ public class GridToolWindow : EditorWindow
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Crear nueva grilla"))
             {
-
+                var obj = new GameObject("GRID");
+                obj.transform.position = Vector3.zero;
+                _customGrid = obj.AddComponent<CustomGrid>();
             }
             if (GUILayout.Button("Cargar grilla"))
             {
