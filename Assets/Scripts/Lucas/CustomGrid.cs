@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class CustomGrid : MonoBehaviour
 {
-    [SerializeField] private float size = 1f;
+    [SerializeField] public float size = 1f; // cambie a public
 
-    private Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
+    public Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
     private object locker;
-    public float Size { get => size; }
+    //public float Size { get => size; }
     public Dictionary<Vector3, GameObject> ObjectList
     {
         get

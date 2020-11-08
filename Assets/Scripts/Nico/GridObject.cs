@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class GridObject : ScriptableObject
 {
+    /*
     public int row;
     public int column;
+    */
+    public float size;
     public Vector3 origin;
-    public void ConstructGrid(int _row, int _column, Vector3 _origin)
+
+    public void Setter(float _size, Vector3 _origin)
     {
-        row = _row;
-        column = _column;
+        size = _size;
         origin = _origin;
     }
-    //Deberiamos guardar data sobre los espacios marcados como ocupados
 }

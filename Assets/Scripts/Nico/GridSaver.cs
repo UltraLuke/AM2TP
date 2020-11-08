@@ -4,21 +4,45 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GridSaver : Editor
+public class GridSaver : EditorWindow
 {
+    public GUIStyle _myStyle;
     static List<GameObject> items = new List<GameObject>();
+    private string _FolderName;
 
     [MenuItem("CustomTools/CustomGrid/Save")]
-    public static void Save()
-    {
-        SaveGrid();
-        SaveItemsGrid();
+    public static void OpenWindow()
+    {        
+        var saveWindow = GetWindow<GridSaver>();
+
+        saveWindow._myStyle = new GUIStyle
+        {
+            fontStyle = FontStyle.BoldAndItalic,
+            fontSize = 12,
+            alignment = TextAnchor.MiddleLeft,
+            wordWrap = true
+        };
+        saveWindow.Show();
     }
+    private void OnGUI()
+    {        
+        _FolderName = EditorGUILayout.TextField("Folder Name: ", _FolderName);
+        EditorGUILayout.LabelField("Path: Assets/Resources/" + _FolderName);
 
-    private static void SaveItemsGrid()
+        if (GUILayout.Button("Save"))
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/" + _FolderName))
+            {
+                AssetDatabase.CreateFolder("Assets/Resources", _FolderName);
+            }
+
+            CopyDataFromGrid();
+            SaveItemsGrid(_FolderName);
+            SaveGrid(_FolderName);
+        }
+    }
+    private static void SaveItemsGrid(string folderName)
     {
-        CreateTestList();
-
         foreach (GameObject item in items)
         {
             //Obtengo el prefab del item
@@ -30,42 +54,37 @@ public class GridSaver : Editor
             scriptable.Setter(item.name, PrefabPath, item.transform.position, item.transform.localScale, item.transform.rotation);
 
             //Guardo el scriptable
-            //Chequeos sobre la carpeta, crearla si no existe o que hacer si ya existe
-            var path = "Assets/Resources/SavedItems/" + item.name + ".asset"; 
+            var path = "Assets/Resources/" + folderName+"/"+ item.name + ".asset"; 
             path = AssetDatabase.GenerateUniqueAssetPath(path);
             AssetDatabase.CreateAsset(scriptable, path);
         }
 
         items.Clear();
     }
-    private static void SaveGrid()
+    private static void SaveGrid(string folderName)
     {
-        //grid.GetGridData() Como me lo pasa? como una lista? row, column, cellsize, origpos
-    }
-    public static void CreateTestList()
-    {
+        var grid = FindObjectOfType<CustomGrid>();
 
+        float size = grid.size;
+
+        Vector3 origin = grid.transform.position;
+
+        var scriptable = ScriptableObject.CreateInstance<GridObject>();
+        scriptable.Setter(size, origin);
+
+        var path = "Assets/Resources/" + folderName + "/" + grid.name + ".asset";
+        //path = AssetDatabase.GenerateUniqueAssetPath(path); Creo que deberia existir una grilla por carpeta
+        AssetDatabase.CreateAsset(scriptable, path);
+    }
+    public static void CopyDataFromGrid()
+    {
         var objects = FindObjectOfType<CustomGrid>().ObjectList;
-        var objectsInScene = new List<GameObject>();
 
         foreach (var item in objects)
         {
-            objectsInScene.Add(item.Value);
+            items.Add(item.Value);
+            Debug.Log("Adding to item: " + item.Value.name);
+            //positionInScene.Add(item.Key);
         }
-
-        //GameObject[] objectsInScene = FindObjectsOfType<GameObject>();
-        for (int i = 0; i < objectsInScene.Count; i++)
-        {
-            items.Add(objectsInScene[i]);
-            Debug.Log("Added: " + objectsInScene[i].name);
-        }
-
-        /* var grid = FindObjectOfType<Grid>();
-         * if(grid)
-         * {
-         *  items = grid.GetObjects();
-         * }
-         *
-         */
     }
 }
