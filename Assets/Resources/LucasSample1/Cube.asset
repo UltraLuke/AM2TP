@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f87cbde265a32140982ebc10491f8f4, type: 3}
-  m_Name: Cube 1
+  m_Name: Cube
   m_EditorClassIdentifier: 
   myName: Cube
   path: Assets/Resources/Cube.prefab
-  position: {x: 24, y: 0, z: 17}
+  position: {x: 32, y: 0, z: 6}
   scale: {x: 1, y: 1, z: 1}
   rotation: {x: 0, y: 0, z: 0, w: 1}

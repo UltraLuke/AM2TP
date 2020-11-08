@@ -35,21 +35,32 @@ public class GridLoader : EditorWindow
 
     List<CustomLoadObject> _CustomLoad= new List<CustomLoadObject>();
 
-    [MenuItem("CustomTools/CustomGrid/Load")]
-    public static void OpenWindow()
-    {
-        var loadWindow = GetWindow<GridLoader>();
-        loadWindow.wantsMouseMove = true;
+    //[MenuItem("CustomTools/CustomGrid/Load")]
+    //public static void OpenWindow()
+    //{
+    //    var loadWindow = GetWindow<GridLoader>();
+    //    loadWindow.wantsMouseMove = true;
         
-        loadWindow._myStyle = new GUIStyle
+    //    loadWindow._myStyle = new GUIStyle
+    //    {
+    //        fontStyle = FontStyle.BoldAndItalic,
+    //        fontSize = 12,
+    //        alignment = TextAnchor.MiddleLeft,
+    //        wordWrap = true
+    //    };
+        
+    //    loadWindow.Show();
+    //}
+
+    private void OnEnable()
+    {
+        _myStyle = new GUIStyle
         {
             fontStyle = FontStyle.BoldAndItalic,
             fontSize = 12,
             alignment = TextAnchor.MiddleLeft,
             wordWrap = true
         };
-        
-        loadWindow.Show();
     }
     private void OnGUI()
     {        
@@ -153,8 +164,8 @@ public class GridLoader : EditorWindow
     private void CreateGrid(GridObject _grid)
     {
         //Va a estar en escena? Tiene prefab? tiene origen (porahora la grilla se dibuja siempre en 000)       
-        grid = new GameObject(_grid.name, typeof(CustomGrid), typeof(GridTester));
-        grid.GetComponent<CustomGrid>().size = _grid.size;
+        grid = new GameObject(_grid.name, typeof(CustomGrid)/*, typeof(GridTester)*/);
+        grid.GetComponent<CustomGrid>().Size = _grid.size;
     }
     private void CreateItem(ItemObject item)
     {

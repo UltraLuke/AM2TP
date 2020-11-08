@@ -10,19 +10,29 @@ public class GridSaver : EditorWindow
     static List<GameObject> items = new List<GameObject>();
     private string _FolderName;
 
-    [MenuItem("CustomTools/CustomGrid/Save")]
-    public static void OpenWindow()
-    {        
-        var saveWindow = GetWindow<GridSaver>();
+    //[MenuItem("CustomTools/CustomGrid/Save")]
+    //public static void OpenWindow()
+    //{        
+    //    var saveWindow = GetWindow<GridSaver>();
 
-        saveWindow._myStyle = new GUIStyle
+    //    saveWindow._myStyle = new GUIStyle
+    //    {
+    //        fontStyle = FontStyle.BoldAndItalic,
+    //        fontSize = 12,
+    //        alignment = TextAnchor.MiddleLeft,
+    //        wordWrap = true
+    //    };
+    //    saveWindow.Show();
+    //}
+    private void OnEnable()
+    {
+        _myStyle = new GUIStyle
         {
             fontStyle = FontStyle.BoldAndItalic,
             fontSize = 12,
             alignment = TextAnchor.MiddleLeft,
             wordWrap = true
         };
-        saveWindow.Show();
     }
     private void OnGUI()
     {        
@@ -65,7 +75,7 @@ public class GridSaver : EditorWindow
     {
         var grid = FindObjectOfType<CustomGrid>();
 
-        float size = grid.size;
+        float size = grid.Size;
 
         Vector3 origin = grid.transform.position;
 

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f87cbde265a32140982ebc10491f8f4, type: 3}
-  m_Name: Enemy
+  m_Name: Cube 1
   m_EditorClassIdentifier: 
-  myName: Enemy
-  path: Assets/Prefab/Enemy.prefab
-  position: {x: 6, y: 0, z: 15}
+  myName: Cube
+  path: Assets/Resources/Cube.prefab
+  position: {x: 34, y: 0, z: 7}
   scale: {x: 1, y: 1, z: 1}
   rotation: {x: 0, y: 0, z: 0, w: 1}

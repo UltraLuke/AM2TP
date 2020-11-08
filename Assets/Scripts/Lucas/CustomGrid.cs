@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class CustomGrid : MonoBehaviour
 {
-    public float size = 1f;
+    private float size = 1f;
+    public float Size
+    {
+        get => size;
+        set
+        {
+            if (value <= 0)
+                size = 0.1f;
+            else
+                size = value;
+        }
+    }
 
     public Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
-    private object locker;
     //public float Size { get => size; }
     public Dictionary<Vector3, GameObject> ObjectList
     {
-        get
-        {
-            return _objects;
-        }
-        set
-        {
-            _objects = value;
-        }
+        get => _objects;
+        set => _objects = value;
     }
+
 
     public Vector3 GetNearestPointOnGrid(Vector3 position)
     {
