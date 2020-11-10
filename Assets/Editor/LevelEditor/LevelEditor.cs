@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -149,8 +148,6 @@ public class LevelEditor : EditorWindow
     {
         EditorGUILayout.LabelField("New Pallete");
 
-        var boldtext = new GUIStyle(GUI.skin.label);
-        boldtext.fontStyle = FontStyle.Bold;
 
         palleteName = EditorGUILayout.TextField("Pallete Name", palleteName);
 
@@ -197,33 +194,16 @@ public class LevelEditor : EditorWindow
                         break;
 
                     GUILayout.BeginVertical("Box");
-                    GUILayout.Label(prefabListCopy[0].name, boldtext);
+                    //GUI.DrawTexture(GUILayoutUtility.GetRect(50, 50), (Texture2D)Resources.Load("unity-128"), ScaleMode.ScaleToFit);
+                    GUILayout.Label(prefabListCopy[0].name);
+                    Texture2D newTexture = Resources.Load(prefabListCopy[0].name, typeof(Texture2D)) as Texture2D;
                     var texture = AssetPreview.GetAssetPreview(prefabListCopy[0]);
-                    var description = GetParentFolder(Path.GetDirectoryName(AssetDatabase.GetAssetPath(prefabListCopy[0])));
-
-                    description = description is null ? "Resources" : description;
-
-                    GUILayout.Label("Folder: " + description);
-
                     if (GUILayout.Button(texture, GUILayout.Width(100), GUILayout.Height(100)))
                     {
-                        string path = AssetDatabase.GetAssetPath(prefabListCopy[0]);
-                        string pathAsset = "";
-                        if (File.Exists(path))
+                        GameObject gameObject = Resources.Load(prefabListCopy[0].name, typeof(GameObject)) as GameObject;
+                        if (!newPalletePrefab.Contains(gameObject))
                         {
-                            path = Path.GetDirectoryName(path);
-
-                            if (GetParentFolder(path) != null)
-                                pathAsset = GetParentFolder(path) + "/" + prefabListCopy[0].name;
-                            else
-                                pathAsset = prefabListCopy[0].name;
-
-                            GameObject gameObject = Resources.Load(pathAsset, typeof(GameObject)) as GameObject;
-
-                            if (!newPalletePrefab.Contains(gameObject) && gameObject != null)
-                            {
-                                newPalletePrefab.Add(gameObject);
-                            }
+                            newPalletePrefab.Add(gameObject);
                         }
                     }
 
@@ -263,63 +243,11 @@ public class LevelEditor : EditorWindow
 
     }
 
-    private string GetParentFolder(string path)
-    {
-        var pathSplitter = path.Split(Path.DirectorySeparatorChar);
-
-        if (pathSplitter[pathSplitter.Length - 1] == "Resources")
-            return null;
-        else
-            return pathSplitter[pathSplitter.Length - 1];
-    }
-
-    private bool Validation(string name)
-    {
-        var validate = true;
-        if (name == string.Empty)
-        {
-            validate = false;
-            EditorGUILayout.HelpBox("The Pallete name cannot be empty", MessageType.Error);
-        }
-
-
-        return validate;
-    }
-
     private static void DrawLine()
     {
         GUILayout.Space(5);
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(100, 2), Color.black);
         GUILayout.Space(5);
     }
-
-    //private string GetPathAfterResourcesPath(string filePath)
-    //{
-    //    string directoryName = "";
-    //    int i = 0;
-
-
-    //    while (directoryName != null)
-    //    {
-    //        Debug.Log("GetPathAfterResourcesPath " + filePath);
-
-    //        directoryName = Path.GetDirectoryName(filePath);
-
-    //        if (directoryName == "Assets" + Path.AltDirectorySeparatorChar + "Resources")
-    //        {
-    //            Debug.Log("LOG NULL");
-    //            directoryName = null;
-    //        }
-
-    //        filePath = directoryName;
-    //        if (i == 1)
-    //        {
-    //            filePath = directoryName + @"\";  // this will preserve the previous path
-    //        }
-    //        i++;
-    //    }
-
-    //    return filePath;
-    //}
 }
 
