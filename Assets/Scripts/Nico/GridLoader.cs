@@ -107,23 +107,26 @@ public class GridLoader : EditorWindow
             }
         }
     }
-
     private void CustomLoader()
     {
+        foreach (var item in _CustomLoad)
+        {
+            //Debug.Log("Item: " + item.name + " selected?: " + item.selected);
+            if (item.selected)
+            {
+                if (item.myObj is GridObject)
+                    CreateGrid((GridObject)item.myObj);
+            }
+        }
         foreach (var item in _CustomLoad)
         {
             if (item.selected)
             {
                 if (item.myObj is ItemObject)
-                {
                     CreateItem((ItemObject)item.myObj);
-                }
-                else
-                    CreateGrid((GridObject)item.myObj);
-            }                
+            }
         }
     }
-
     private void GenerateCustomList(string folderName)
     {
         ScriptableObject[] content = Resources.LoadAll<ScriptableObject>(folderName + "/");
@@ -143,7 +146,7 @@ public class GridLoader : EditorWindow
             item.selected = EditorGUILayout.Toggle(item.name, item.selected);
             EditorGUILayout.EndVertical();
 
-            Debug.Log("Escriptable: " + item.name + " selected: " + item.selected);
+            //Debug.Log("Escriptable: " + item.name + " selected: " + item.selected);
         }
     }
     private void Load(string folderName)
@@ -162,16 +165,20 @@ public class GridLoader : EditorWindow
         EditorGUILayout.HelpBox("Complete", MessageType.Info);
     }
     private void CreateGrid(GridObject _grid)
-    {
-        //Va a estar en escena? Tiene prefab? tiene origen (porahora la grilla se dibuja siempre en 000)       
+    {   
         grid = new GameObject(_grid.name, typeof(CustomGrid)/*, typeof(GridTester)*/);
         grid.GetComponent<CustomGrid>().Size = _grid.size;
     }
     private void CreateItem(ItemObject item)
     {
+        //Debug.Log("Creating obj of path: " + item.path);
+
         string path = item.path;
         Object go = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
+        //Debug.Log("Path found: " + go);
+
         GameObject objInScene = (GameObject)PrefabUtility.InstantiatePrefab(go);
+        //Debug.Log("Prefab instantiate: " + objInScene);
         objInScene.transform.rotation = item.rotation;
         objInScene.transform.localScale = item.scale;
         objInScene.transform.position = item.position;
@@ -180,6 +187,7 @@ public class GridLoader : EditorWindow
     }
     private void AddItemToGrid(GameObject item)
     {
+        //Debug.Log("Adding to Grid: " + item);
         grid.GetComponent<CustomGrid>().SetObjectOnGrid(item, item.transform.position);
     }
 }
