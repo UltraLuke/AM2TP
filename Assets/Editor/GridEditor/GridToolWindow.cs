@@ -73,6 +73,8 @@ public class GridToolWindow : EditorWindow
                 var obj = new GameObject("GRID");
                 obj.transform.position = Vector3.zero;
                 _customGrid = obj.AddComponent<CustomGrid>();
+
+                Undo.RegisterCreatedObjectUndo(obj, "Object created");
             }
             if (GUILayout.Button("Cargar grilla"))
             {
@@ -214,7 +216,11 @@ public class GridToolWindow : EditorWindow
                     if (_canReplaceObjects || _customGrid.CheckIfAvailablePosition(hitPoint))
                     {
                         var obj = (GameObject)PrefabUtility.InstantiatePrefab(currObj);
+                        Undo.RegisterCreatedObjectUndo(obj, "Object created");
+                        //int undoGroup = Undo.GetCurrentGroup();
+                        Undo.RecordObject(_customGrid, "Object created");
                         _customGrid.SetObjectOnGrid(obj, hitPoint);
+                        //Undo.CollapseUndoOperations(undoGroup);
                     }
                 }
             }

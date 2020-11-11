@@ -17,7 +17,7 @@ public class CustomGrid : MonoBehaviour
         }
     }
 
-    public Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
+    private Dictionary<Vector3, GameObject> _objects = new Dictionary<Vector3, GameObject>();
     //public float Size { get => size; }
     public Dictionary<Vector3, GameObject> ObjectList
     {
@@ -50,10 +50,15 @@ public class CustomGrid : MonoBehaviour
         obj.transform.position = gridPos;
 
         if (ObjectList.ContainsKey(gridPos))
-            DestroyImmediate(ObjectList[gridPos]);
+            UnityEditor.Undo.DestroyObjectImmediate(ObjectList[gridPos]);
+
+        //int undoGroup = Undo.GetCurrentGroup();
 
         ObjectList[gridPos] = obj;
+
+        //Undo.CollapseUndoOperations(undoGroup);
     }
+
     public GameObject GetObjectOnGrid(Vector3 position)
     {
         position = GetNearestPointOnGrid(position);
@@ -63,20 +68,7 @@ public class CustomGrid : MonoBehaviour
 
         return null;
     }
-    //public GameObject TakeObjectFromGrid(Vector3 position)
-    //{
-    //    position = GetNearestPointOnGrid(position);
-
-    //    if (_objects.ContainsKey(position))
-    //    {
-    //        var obj = _objects[position];
-    //        _objects.Remove(position);
-
-    //        return obj;
-    //    }
-
-    //    return null;
-    //}
+    
     public void MoveObject(Vector3 from, Vector3 to)
     {
         from = GetNearestPointOnGrid(from);
@@ -85,25 +77,28 @@ public class CustomGrid : MonoBehaviour
         if (ObjectList.ContainsKey(from))
         {
             var obj = _objects[from];
+            UnityEditor.Undo.RegisterCompleteObjectUndo(obj.transform, "Object moved");
             obj.transform.position = to;
 
             if (ObjectList.ContainsKey(to))
-                DestroyImmediate(ObjectList[to]);
+                UnityEditor.Undo.DestroyObjectImmediate(ObjectList[to]);
 
             ObjectList[to] = obj;
             ObjectList.Remove(from);
         }
     }
+
     public void DeleteObject(Vector3 position)
     {
         position = GetNearestPointOnGrid(position);
 
         if (ObjectList.ContainsKey(position))
         {
-            DestroyImmediate(ObjectList[position]);
+            UnityEditor.Undo.DestroyObjectImmediate(ObjectList[position]);
             ObjectList[position] = null;
         }
     }
+
     public bool CheckIfAvailablePosition(Vector3 position)
     {
         position = GetNearestPointOnGrid(position);
@@ -120,9 +115,4 @@ public class CustomGrid : MonoBehaviour
                 ObjectList.Remove(item.Key);
         }
     }
-
-    //private void OnDrawGizmos()
-    //{
-        
-    //}
 }
