@@ -10,6 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71260934f5d4f6645adbec10fae4570c, type: 3}
-  m_Name: Buildings
+  m_Name: Pisos
   m_EditorClassIdentifier: 
-  paletteName: Buildings
+  content: []
+  contentString: []
+  paletteName: Pisos

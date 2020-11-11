@@ -6,7 +6,9 @@ using UnityEngine;
 
 public class LevelEditor : EditorWindow
 {
-    string[] options = { "Palletes", "New Pallete" };
+    Vector2 scrollPos;
+
+    string[] options = { "Ver Palletes", "Nueva Pallete" };
     int tabsSelected = 0;
     int palleteSelected = 0;
     List<Texture2D> textures = new List<Texture2D>();
@@ -27,11 +29,14 @@ public class LevelEditor : EditorWindow
 
     private string palleteName = "";
 
-    [MenuItem("CustomTools/LevelEditor")]
+    private static float withWindow = 600f;
+    private static float heightWindow = 400f;
+
+    [MenuItem("CustomTools/PalleteEditor")]
     public static void OpenWindow()
     {
         var myWindow = GetWindow<LevelEditor>();
-        myWindow.minSize = new UnityEngine.Vector2(600, 300);
+        myWindow.minSize = new UnityEngine.Vector2(withWindow, heightWindow + 50);
         myWindow.wantsMouseMove = true;
 
         string[] paths = AssetDatabase.FindAssets("t:prefab");
@@ -51,7 +56,7 @@ public class LevelEditor : EditorWindow
     private void DrawHeader()
     {
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Level Editor", GUILayout.Width(75));
+        EditorGUILayout.LabelField("Pallete Editor", GUILayout.Width(75));
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
@@ -61,7 +66,7 @@ public class LevelEditor : EditorWindow
         if (tabsSelected == 0)
         {
             GUILayout.BeginVertical();
-            GUILayout.Label("Class");
+            GUILayout.Label("Seleccionar Pallete");
             palleteSelected = EditorGUILayout.Popup(palleteSelected, GetPalletesName(palletes));
             GUILayout.EndVertical();
             MakeWindow(palleteSelected);
@@ -77,11 +82,11 @@ public class LevelEditor : EditorWindow
 
         var auxPallete = palletes[palletIndex];
 
-
+        //scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(withWindow), GUILayout.Height(heightWindow));
 
         if (auxPallete.content != null)
         {
-            var prefabListCopy = auxPallete.content.Keys.ToList().GetRange(0, auxPallete.content.Count);
+            var prefabListCopy = auxPallete.content.ToList().GetRange(0, auxPallete.content.Count);
 
             do
             {
@@ -93,11 +98,19 @@ public class LevelEditor : EditorWindow
                         break;
 
                     GUILayout.BeginVertical("Box");
-                    //GUI.DrawTexture(GUILayoutUtility.GetRect(50, 50), (Texture2D)Resources.Load("unity-128"), ScaleMode.ScaleToFit);
                     GUILayout.Label(prefabListCopy[0].name);
                     var newTexture = AssetPreview.GetAssetPreview(prefabListCopy[0]);
-                    //Texture2D newTexture = Resources.Load("unity-128", typeof(Texture2D)) as Texture2D;
-                    GUILayout.Button(newTexture, GUILayout.Width(100), GUILayout.Height(100));
+                    if (GUILayout.Button(newTexture, GUILayout.Width(100), GUILayout.Height(100)))
+                    {
+
+                        var gameObject = FindGameObjectInProject(prefabListCopy[0]);
+
+                        if (gameObject is null)
+                            Debug.Log("IS NULL");
+
+                        GridToolWindow.currObj = gameObject;
+
+                    }
                     prefabListCopy.RemoveAt(0);
                     GUILayout.EndVertical();
 
@@ -106,6 +119,8 @@ public class LevelEditor : EditorWindow
             }
             while (prefabListCopy.Count != 0);
         }
+
+        //EditorGUILayout.EndScrollView();
     }
 
     private string[] GetPalletesName(List<PaletteObject> palletes)
@@ -121,6 +136,9 @@ public class LevelEditor : EditorWindow
 
 
         var getPalettes = PaletteManager.GetPalettes();
+
+        if (getPalettes.Length == 0)
+            return new List<PaletteObject>() { new PaletteObject() { name = "Debe Crear un paleta" } };
 
         for (int x = 0; x < getPalettes.Length; x++)
         {
@@ -147,7 +165,7 @@ public class LevelEditor : EditorWindow
 
     private void NewPallete()
     {
-        EditorGUILayout.LabelField("New Pallete");
+        EditorGUILayout.LabelField("Nueva Pallete");
 
         var boldtext = new GUIStyle(GUI.skin.label);
         boldtext.fontStyle = FontStyle.Bold;
@@ -175,6 +193,7 @@ public class LevelEditor : EditorWindow
 
         string[] paths = AssetDatabase.FindAssets("t:prefab", new[] { "Assets/Resources" });
 
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(withWindow), GUILayout.Height(heightWindow));
 
         for (int i = 0; i < paths.Length; i++)
         {
@@ -207,23 +226,12 @@ public class LevelEditor : EditorWindow
 
                     if (GUILayout.Button(texture, GUILayout.Width(100), GUILayout.Height(100)))
                     {
-                        string path = AssetDatabase.GetAssetPath(prefabListCopy[0]);
-                        string pathAsset = "";
-                        if (File.Exists(path))
+
+                        var gameobject = FindGameObjectInProject(prefabListCopy[0]);
+
+                        if (!newPalletePrefab.Contains(gameobject) && gameobject != null)
                         {
-                            path = Path.GetDirectoryName(path);
-
-                            if (GetParentFolder(path) != null)
-                                pathAsset = GetParentFolder(path) + "/" + prefabListCopy[0].name;
-                            else
-                                pathAsset = prefabListCopy[0].name;
-
-                            GameObject gameObject = Resources.Load(pathAsset, typeof(GameObject)) as GameObject;
-
-                            if (!newPalletePrefab.Contains(gameObject) && gameObject != null)
-                            {
-                                newPalletePrefab.Add(gameObject);
-                            }
+                            newPalletePrefab.Add(gameobject);
                         }
                     }
 
@@ -236,7 +244,10 @@ public class LevelEditor : EditorWindow
             while (prefabListCopy.Count != 0);
         }
 
-        if (GUILayout.Button("Save Pallete", GUILayout.Width(100), GUILayout.Height(20)))
+        EditorGUILayout.EndScrollView();
+        DrawLine();
+
+        if (GUILayout.Button("Guardar Paleta", GUILayout.Width(100), GUILayout.Height(20)))
         {
             if (palleteName == string.Empty)
                 return;
@@ -244,23 +255,44 @@ public class LevelEditor : EditorWindow
             PaletteManager.CreatePalette(palleteName);
 
             var pallete = PaletteManager.LoadPalette(palleteName);
-            //TODO: Agregar logica de descripcion
-            string desc = "Test description";
 
             foreach (GameObject aux in newPalletePrefab)
-                pallete.AddObject(aux, desc);
+                pallete.AddObject(aux);
 
             palleteName = "";
             newPalletePrefab.Clear();
             Repaint();
+
         }
-        if (GUILayout.Button("Clear Pallete", GUILayout.Width(100), GUILayout.Height(20)))
+        if (GUILayout.Button("Limpiar Paleta", GUILayout.Width(100), GUILayout.Height(20)))
         {
             palleteName = "";
             newPalletePrefab.Clear();
             Repaint();
         }
 
+
+    }
+
+    private GameObject FindGameObjectInProject(Object prefabObject)
+    {
+        string path = AssetDatabase.GetAssetPath(prefabObject);
+        string pathAsset = "";
+        if (File.Exists(path))
+        {
+            path = Path.GetDirectoryName(path);
+
+            if (GetParentFolder(path) != null)
+                pathAsset = GetParentFolder(path) + "/" + prefabObject.name;
+            else
+                pathAsset = prefabObject.name;
+
+            GameObject gameObject = Resources.Load(pathAsset, typeof(GameObject)) as GameObject;
+
+            return gameObject;
+        }
+
+        return null;
     }
 
     private string GetParentFolder(string path)
@@ -292,34 +324,5 @@ public class LevelEditor : EditorWindow
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(100, 2), Color.black);
         GUILayout.Space(5);
     }
-
-    //private string GetPathAfterResourcesPath(string filePath)
-    //{
-    //    string directoryName = "";
-    //    int i = 0;
-
-
-    //    while (directoryName != null)
-    //    {
-    //        Debug.Log("GetPathAfterResourcesPath " + filePath);
-
-    //        directoryName = Path.GetDirectoryName(filePath);
-
-    //        if (directoryName == "Assets" + Path.AltDirectorySeparatorChar + "Resources")
-    //        {
-    //            Debug.Log("LOG NULL");
-    //            directoryName = null;
-    //        }
-
-    //        filePath = directoryName;
-    //        if (i == 1)
-    //        {
-    //            filePath = directoryName + @"\";  // this will preserve the previous path
-    //        }
-    //        i++;
-    //    }
-
-    //    return filePath;
-    //}
 }
 

@@ -19,7 +19,7 @@ public class GridToolWindow : EditorWindow
     #endregion
 
     #region Grid Editor
-    GameObject currObj;
+    public static GameObject currObj;
     float cellSize;
     GameObject _lastCurrObj;
     Plane _plane;
