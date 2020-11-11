@@ -64,7 +64,7 @@ public class GridToolWindow : EditorWindow
 
     private void OnGUI()
     {
-        if(_customGrid == null)
+        if (_customGrid == null)
         {
             EditorGUILayout.LabelField("Comencemos");
             EditorGUILayout.BeginHorizontal();
@@ -120,7 +120,6 @@ public class GridToolWindow : EditorWindow
     //Logica principal de la herramienta de edicion
     private void GridEditor()
     {
-        //gridTester.layerMask = layerMask = EditorGUILayout.LayerField("Plano de referencia", layerMask);
         if (!_movingObject)
         {
             cellSize = _customGrid.Size = EditorGUILayout.FloatField("Cell Size", cellSize);
@@ -132,8 +131,6 @@ public class GridToolWindow : EditorWindow
         {
             EditorGUILayout.HelpBox("No se puede acceder a los controles mientras se está moviendo un objeto", MessageType.Info);
         }
-
-
 
         //Si entro al modo edicion instancio el objeto de muestra del objeto actual.
         if (_tabSelection == 0)
@@ -183,15 +180,7 @@ public class GridToolWindow : EditorWindow
     //Chequeo teclas del teclado por si realiza una combinacion
     private void CheckKeys()
     {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    var objects = _customGrid.ObjectList;
-
-        //    foreach (var item in objects)
-        //    {
-        //        Debug.Log(item.Key + " | " + item.Value);
-        //    }
-        //}
+        //TO DO
     }
 
     //Metodo para hacer pintado de escenas
@@ -217,10 +206,7 @@ public class GridToolWindow : EditorWindow
                     {
                         var obj = (GameObject)PrefabUtility.InstantiatePrefab(currObj);
                         Undo.RegisterCreatedObjectUndo(obj, "Object created");
-                        //int undoGroup = Undo.GetCurrentGroup();
-                        Undo.RecordObject(_customGrid, "Object created");
                         _customGrid.SetObjectOnGrid(obj, hitPoint);
-                        //Undo.CollapseUndoOperations(undoGroup);
                     }
                 }
             }
@@ -327,7 +313,7 @@ public class GridToolWindow : EditorWindow
     //Dibujo la grilla en la escena
     private void DrawGrid()
     {
-        if(_customGrid != null && cellSize > 0)
+        if (_customGrid != null && cellSize > 0)
         {
             _customGrid.CleanEmptyReferences();
 

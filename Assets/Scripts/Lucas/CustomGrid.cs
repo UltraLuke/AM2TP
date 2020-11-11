@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class CustomGrid : MonoBehaviour
 {
     private float size = 1f;
@@ -24,7 +26,6 @@ public class CustomGrid : MonoBehaviour
         get => _objects;
         set => _objects = value;
     }
-
 
     public Vector3 GetNearestPointOnGrid(Vector3 position)
     {
@@ -49,14 +50,12 @@ public class CustomGrid : MonoBehaviour
         var gridPos = GetNearestPointOnGrid(position);
         obj.transform.position = gridPos;
 
+        UnityEditor.Undo.RegisterCompleteObjectUndo(this, "References changed");
+
         if (ObjectList.ContainsKey(gridPos))
             UnityEditor.Undo.DestroyObjectImmediate(ObjectList[gridPos]);
 
-        //int undoGroup = Undo.GetCurrentGroup();
-
         ObjectList[gridPos] = obj;
-
-        //Undo.CollapseUndoOperations(undoGroup);
     }
 
     public GameObject GetObjectOnGrid(Vector3 position)
@@ -77,7 +76,9 @@ public class CustomGrid : MonoBehaviour
         if (ObjectList.ContainsKey(from))
         {
             var obj = _objects[from];
+            obj.transform.position = from;
             UnityEditor.Undo.RegisterCompleteObjectUndo(obj.transform, "Object moved");
+            UnityEditor.Undo.RegisterCompleteObjectUndo(this, "Object moved");
             obj.transform.position = to;
 
             if (ObjectList.ContainsKey(to))
@@ -111,6 +112,7 @@ public class CustomGrid : MonoBehaviour
     {
         foreach (var item in ObjectList)
         {
+            Debug.Log(item);
             if (item.Value == null)
                 ObjectList.Remove(item.Key);
         }
