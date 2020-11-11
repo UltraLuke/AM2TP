@@ -19,7 +19,7 @@ public class GridToolWindow : EditorWindow
     #endregion
 
     #region Grid Editor
-    GameObject currObj;
+    private GameObject currObj;
     float cellSize;
     GameObject _lastCurrObj;
     Plane _plane;
@@ -33,24 +33,18 @@ public class GridToolWindow : EditorWindow
 
     //Flags
     bool _movingObject = false;
-    bool _rendered = false;
-    #endregion
 
-    [MenuItem("CustomTools/GridTool")]
-    public static void OpenWindow()
+    public GameObject CurrObj
     {
-        var gridWindow = GetWindow<GridToolWindow>();
-
-        gridWindow._myStyle = new GUIStyle
+        get => currObj;
+        set
         {
-            fontStyle = FontStyle.BoldAndItalic,
-            fontSize = 12,
-            alignment = TextAnchor.MiddleLeft,
-            wordWrap = true
-        };
-
-        gridWindow.Show();
+            currObj = value;
+            Repaint();
+        }
     }
+
+    #endregion
 
     private void OnEnable()
     {
@@ -64,7 +58,7 @@ public class GridToolWindow : EditorWindow
 
     private void OnGUI()
     {
-        if(_customGrid == null)
+        if (_customGrid == null)
         {
             EditorGUILayout.LabelField("Comencemos");
             EditorGUILayout.BeginHorizontal();
@@ -73,6 +67,8 @@ public class GridToolWindow : EditorWindow
                 var obj = new GameObject("GRID");
                 obj.transform.position = Vector3.zero;
                 _customGrid = obj.AddComponent<CustomGrid>();
+
+                Undo.RegisterCreatedObjectUndo(obj, "Object created");
             }
             if (GUILayout.Button("Cargar grilla"))
             {
@@ -118,7 +114,6 @@ public class GridToolWindow : EditorWindow
     //Logica principal de la herramienta de edicion
     private void GridEditor()
     {
-        //gridTester.layerMask = layerMask = EditorGUILayout.LayerField("Plano de referencia", layerMask);
         if (!_movingObject)
         {
             cellSize = _customGrid.Size = EditorGUILayout.FloatField("Cell Size", cellSize);
@@ -130,8 +125,6 @@ public class GridToolWindow : EditorWindow
         {
             EditorGUILayout.HelpBox("No se puede acceder a los controles mientras se está moviendo un objeto", MessageType.Info);
         }
-
-
 
         //Si entro al modo edicion instancio el objeto de muestra del objeto actual.
         if (_tabSelection == 0)
@@ -181,15 +174,7 @@ public class GridToolWindow : EditorWindow
     //Chequeo teclas del teclado por si realiza una combinacion
     private void CheckKeys()
     {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    var objects = _customGrid.ObjectList;
-
-        //    foreach (var item in objects)
-        //    {
-        //        Debug.Log(item.Key + " | " + item.Value);
-        //    }
-        //}
+        //TO DO
     }
 
     //Metodo para hacer pintado de escenas
@@ -214,6 +199,7 @@ public class GridToolWindow : EditorWindow
                     if (_canReplaceObjects || _customGrid.CheckIfAvailablePosition(hitPoint))
                     {
                         var obj = (GameObject)PrefabUtility.InstantiatePrefab(currObj);
+                        Undo.RegisterCreatedObjectUndo(obj, "Object created");
                         _customGrid.SetObjectOnGrid(obj, hitPoint);
                     }
                 }
@@ -321,7 +307,7 @@ public class GridToolWindow : EditorWindow
     //Dibujo la grilla en la escena
     private void DrawGrid()
     {
-        if(_customGrid != null && cellSize > 0)
+        if (_customGrid != null && cellSize > 0)
         {
             _customGrid.CleanEmptyReferences();
 
