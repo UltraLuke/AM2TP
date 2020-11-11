@@ -20,6 +20,8 @@ public class GridLoader : EditorWindow
     private bool folderError = false;
     private bool drawItems = false;
 
+    Vector2 scrollPos;
+
     public class CustomLoadObject
     {
         public string name;
@@ -140,6 +142,7 @@ public class GridLoader : EditorWindow
 
     private void ShowInsideFolder()
     {
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
         foreach (var item in _CustomLoad)
         {
             EditorGUILayout.BeginVertical();
@@ -148,6 +151,7 @@ public class GridLoader : EditorWindow
 
             //Debug.Log("Escriptable: " + item.name + " selected: " + item.selected);
         }
+        EditorGUILayout.EndScrollView();
     }
     private void Load(string folderName)
     {
