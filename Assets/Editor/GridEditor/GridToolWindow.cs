@@ -19,7 +19,7 @@ public class GridToolWindow : EditorWindow
     #endregion
 
     #region Grid Editor
-    public static GameObject currObj;
+    private GameObject currObj;
     float cellSize;
     GameObject _lastCurrObj;
     Plane _plane;
@@ -33,24 +33,18 @@ public class GridToolWindow : EditorWindow
 
     //Flags
     bool _movingObject = false;
-    bool _rendered = false;
-    #endregion
 
-    [MenuItem("CustomTools/GridTool")]
-    public static void OpenWindow()
+    public GameObject CurrObj
     {
-        var gridWindow = GetWindow<GridToolWindow>();
-
-        gridWindow._myStyle = new GUIStyle
+        get => currObj;
+        set
         {
-            fontStyle = FontStyle.BoldAndItalic,
-            fontSize = 12,
-            alignment = TextAnchor.MiddleLeft,
-            wordWrap = true
-        };
-
-        gridWindow.Show();
+            currObj = value;
+            Repaint();
+        }
     }
+
+    #endregion
 
     private void OnEnable()
     {

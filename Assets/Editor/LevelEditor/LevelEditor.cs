@@ -32,18 +32,23 @@ public class LevelEditor : EditorWindow
     private static float withWindow = 600f;
     private static float heightWindow = 400f;
 
+    private GridToolWindow _gridToolWindow;
+
     [MenuItem("CustomTools/PalleteEditor")]
     public static void OpenWindow()
     {
         var myWindow = GetWindow<LevelEditor>();
+
         myWindow.minSize = new UnityEngine.Vector2(withWindow, heightWindow + 50);
         myWindow.wantsMouseMove = true;
 
         string[] paths = AssetDatabase.FindAssets("t:prefab");
         select = new bool[paths.Length];
 
-
         myWindow.Show();
+
+        myWindow._gridToolWindow = GetWindow<GridToolWindow>();
+        myWindow._gridToolWindow.Show();
     }
 
     private void OnGUI()
@@ -51,6 +56,12 @@ public class LevelEditor : EditorWindow
         palletes = GetPalletes();
 
         DrawHeader();
+    }
+
+    private void OnDisable()
+    {
+        if(_gridToolWindow != null)
+            _gridToolWindow.Close();
     }
 
     private void DrawHeader()
@@ -108,7 +119,13 @@ public class LevelEditor : EditorWindow
                         if (gameObject is null)
                             Debug.Log("IS NULL");
 
-                        GridToolWindow.currObj = gameObject;
+                        if(_gridToolWindow == null)
+                        {
+                            _gridToolWindow = GetWindow<GridToolWindow>();
+                            _gridToolWindow.Show();
+                        }
+
+                        _gridToolWindow.CurrObj = gameObject;
 
                     }
                     prefabListCopy.RemoveAt(0);

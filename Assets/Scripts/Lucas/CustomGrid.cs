@@ -112,7 +112,6 @@ public class CustomGrid : MonoBehaviour
     {
         foreach (var item in ObjectList)
         {
-            Debug.Log(item);
             if (item.Value == null)
                 ObjectList.Remove(item.Key);
         }

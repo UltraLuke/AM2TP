@@ -10,20 +10,6 @@ public class GridSaver : EditorWindow
     static List<GameObject> items = new List<GameObject>();
     private string _FolderName;
 
-    //[MenuItem("CustomTools/CustomGrid/Save")]
-    //public static void OpenWindow()
-    //{        
-    //    var saveWindow = GetWindow<GridSaver>();
-
-    //    saveWindow._myStyle = new GUIStyle
-    //    {
-    //        fontStyle = FontStyle.BoldAndItalic,
-    //        fontSize = 12,
-    //        alignment = TextAnchor.MiddleLeft,
-    //        wordWrap = true
-    //    };
-    //    saveWindow.Show();
-    //}
     private void OnEnable()
     {
         _myStyle = new GUIStyle
@@ -93,8 +79,6 @@ public class GridSaver : EditorWindow
         foreach (var item in objects)
         {
             items.Add(item.Value);
-            Debug.Log("Adding to item: " + item.Value.name);
-            //positionInScene.Add(item.Key);
         }
     }
 }
