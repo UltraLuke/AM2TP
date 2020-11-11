@@ -19,7 +19,7 @@ public class SaveTester : ScriptableObject
 
         foreach (var item in objectList)
         {
-            palette.AddObject(item, item.name);
+            palette.AddObject(item);
         }
     }
 }
