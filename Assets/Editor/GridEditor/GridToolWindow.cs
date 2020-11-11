@@ -54,6 +54,17 @@ public class GridToolWindow : EditorWindow
 
         SceneView.duringSceneGui += OnSceneGui;
         SceneView.RepaintAll();
+
+        GridObject[] GridData = Resources.LoadAll<GridObject>("AutosaveGrid/");
+
+        if (GridData != null && GridData.Length > 0)
+        {
+            var grid = new GameObject(GridData[0].name, typeof(CustomGrid));
+            cellSize = GridData[0].size;
+
+            _customGrid = grid.GetComponent<CustomGrid>();
+            _customGrid.Size = GridData[0].size;
+        }
     }
 
     private void OnGUI()
@@ -97,6 +108,9 @@ public class GridToolWindow : EditorWindow
 
         if (_selectedObject != null)
             DestroyImmediate(_selectedObject);
+
+        if (_customGrid != null)
+            _customGrid.OnToolGridClosed();
 
         SceneView.duringSceneGui -= OnSceneGui;
     }

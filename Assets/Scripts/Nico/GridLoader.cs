@@ -35,14 +35,14 @@ public class GridLoader : EditorWindow
         }
     }
 
-    List<CustomLoadObject> _CustomLoad= new List<CustomLoadObject>();
+    List<CustomLoadObject> _CustomLoad = new List<CustomLoadObject>();
 
     //[MenuItem("CustomTools/CustomGrid/Load")]
     //public static void OpenWindow()
     //{
     //    var loadWindow = GetWindow<GridLoader>();
     //    loadWindow.wantsMouseMove = true;
-        
+
     //    loadWindow._myStyle = new GUIStyle
     //    {
     //        fontStyle = FontStyle.BoldAndItalic,
@@ -50,7 +50,7 @@ public class GridLoader : EditorWindow
     //        alignment = TextAnchor.MiddleLeft,
     //        wordWrap = true
     //    };
-        
+
     //    loadWindow.Show();
     //}
 
@@ -65,14 +65,14 @@ public class GridLoader : EditorWindow
         };
     }
     private void OnGUI()
-    {        
-        _FolderName = EditorGUILayout.TextField("Folder Name: ", _FolderName);        
+    {
+        _FolderName = EditorGUILayout.TextField("Folder Name: ", _FolderName);
         if (GUILayout.Button("Load Full"))
         {
             if (AssetDatabase.IsValidFolder("Assets/Resources/" + _FolderName))
             {
                 folderError = false;
-                Load(_FolderName);                
+                Load(_FolderName);
             }
             else
                 folderError = true;
@@ -85,7 +85,7 @@ public class GridLoader : EditorWindow
 
         EditorGUILayout.Space();
 
-        if(GUILayout.Button("Custom Load"))
+        if (GUILayout.Button("Custom Load"))
         {
             if (AssetDatabase.IsValidFolder("Assets/Resources/" + _FolderName))
             {
@@ -98,12 +98,12 @@ public class GridLoader : EditorWindow
 
         if (drawItems)
         {
-            if(_CustomLoad.Count == 0)
+            if (_CustomLoad.Count == 0)
                 GenerateCustomList(_FolderName);
 
             ShowInsideFolder();
 
-            if(GUILayout.Button("Load Selection"))
+            if (GUILayout.Button("Load Selection"))
             {
                 CustomLoader();
             }
@@ -132,7 +132,7 @@ public class GridLoader : EditorWindow
     private void GenerateCustomList(string folderName)
     {
         ScriptableObject[] content = Resources.LoadAll<ScriptableObject>(folderName + "/");
-        
+
         foreach (var item in content)
         {
             CustomLoadObject newObj = new CustomLoadObject(item.name, item, false);
@@ -169,7 +169,7 @@ public class GridLoader : EditorWindow
         EditorGUILayout.HelpBox("Complete", MessageType.Info);
     }
     private void CreateGrid(GridObject _grid)
-    {   
+    {
         grid = new GameObject(_grid.name, typeof(CustomGrid)/*, typeof(GridTester)*/);
         grid.GetComponent<CustomGrid>().Size = _grid.size;
     }
