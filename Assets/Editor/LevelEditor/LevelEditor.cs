@@ -189,6 +189,11 @@ public class LevelEditor : EditorWindow
 
         palleteName = EditorGUILayout.TextField("Pallete Name", palleteName);
 
+        if (palleteName == string.Empty)
+        {
+            EditorGUILayout.HelpBox("El nombre de la Paleta no puede estar vacio", MessageType.Error);
+        }
+
         DrawLine();
 
         foreach (var auxenemy in newPalletePrefab)
@@ -266,9 +271,6 @@ public class LevelEditor : EditorWindow
 
         if (GUILayout.Button("Guardar Paleta", GUILayout.Width(100), GUILayout.Height(20)))
         {
-            if (palleteName == string.Empty)
-                return;
-
             PaletteManager.CreatePalette(palleteName);
 
             var pallete = PaletteManager.LoadPalette(palleteName);
