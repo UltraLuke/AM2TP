@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,7 +22,7 @@ public class GridSaver : EditorWindow
         };
     }
     private void OnGUI()
-    {        
+    {
         _FolderName = EditorGUILayout.TextField("Folder Name: ", _FolderName);
         EditorGUILayout.LabelField("Path: Assets/Resources/" + _FolderName);
 
@@ -44,13 +45,13 @@ public class GridSaver : EditorWindow
             //Obtengo el prefab del item
             var prefab = PrefabUtility.GetCorrespondingObjectFromSource(item);
             var PrefabPath = AssetDatabase.GetAssetPath(prefab);
-            
+
             //Creo el scriptable
             var scriptable = ScriptableObject.CreateInstance<ItemObject>();
             scriptable.Setter(item.name, PrefabPath, item.transform.position, item.transform.localScale, item.transform.rotation);
 
             //Guardo el scriptable
-            var path = "Assets/Resources/" + folderName+"/"+ item.name + ".asset"; 
+            var path = "Assets/Resources/" + folderName + "/" + item.name + ".asset";
             path = AssetDatabase.GenerateUniqueAssetPath(path);
             AssetDatabase.CreateAsset(scriptable, path);
         }
@@ -80,5 +81,11 @@ public class GridSaver : EditorWindow
         {
             items.Add(item.Value);
         }
+    }
+
+    public static void AutoSave()
+    {
+        CopyDataFromGrid();
+        SaveGrid("AutosaveGrid");
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [Serializable]
@@ -67,7 +68,7 @@ public class CustomGrid : MonoBehaviour
 
         return null;
     }
-    
+
     public void MoveObject(Vector3 from, Vector3 to)
     {
         from = GetNearestPointOnGrid(from);
@@ -115,5 +116,11 @@ public class CustomGrid : MonoBehaviour
             if (item.Value == null)
                 ObjectList.Remove(item.Key);
         }
+    }
+
+    public void OnToolGridClosed()
+    {
+        GridSaver.AutoSave();
+        DestroyImmediate(gameObject);
     }
 }
